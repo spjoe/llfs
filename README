@@ -1,0 +1,7 @@
+Hier ist das root verzeichniss von llfs:
+Folgenden ordner sind entahlten
+[llfs]
+	Hier ist das Kernel Modul enthalten
+[e2fsprogs]
+	Hier sind die tool für das FS enthalten
+
