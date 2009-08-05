@@ -1226,7 +1226,7 @@ struct inode *ext2_iget (struct super_block *sb, unsigned long ino)
 		return inode;
 
 	ei = EXT2_I(inode);
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 	ei->i_acl = EXT2_ACL_NOT_CACHED;
 	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
 #endif

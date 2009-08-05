@@ -123,7 +123,7 @@ static int ext2_mknod (struct inode * dir, struct dentry *dentry, int mode, dev_
 	err = PTR_ERR(inode);
 	if (!IS_ERR(inode)) {
 		init_special_inode(inode, inode->i_mode, rdev);
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 		inode->i_op = &ext2_special_inode_operations;
 #endif
 		mark_inode_dirty(inode);
@@ -380,7 +380,7 @@ const struct inode_operations ext2_dir_inode_operations = {
 	.rmdir		= ext2_rmdir,
 	.mknod		= ext2_mknod,
 	.rename		= ext2_rename,
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	.setxattr	= generic_setxattr,
 	.getxattr	= generic_getxattr,
 	.listxattr	= ext2_listxattr,
@@ -391,7 +391,7 @@ const struct inode_operations ext2_dir_inode_operations = {
 };
 
 const struct inode_operations ext2_special_inode_operations = {
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	.setxattr	= generic_setxattr,
 	.getxattr	= generic_getxattr,
 	.listxattr	= ext2_listxattr,

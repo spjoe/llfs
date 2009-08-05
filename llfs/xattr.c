@@ -102,12 +102,12 @@ static struct mb_cache *ext2_xattr_cache;
 
 static struct xattr_handler *ext2_xattr_handler_map[] = {
 	[EXT2_XATTR_INDEX_USER]		     = &ext2_xattr_user_handler,
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 	[EXT2_XATTR_INDEX_POSIX_ACL_ACCESS]  = &ext2_xattr_acl_access_handler,
 	[EXT2_XATTR_INDEX_POSIX_ACL_DEFAULT] = &ext2_xattr_acl_default_handler,
 #endif
 	[EXT2_XATTR_INDEX_TRUSTED]	     = &ext2_xattr_trusted_handler,
-#ifdef CONFIG_EXT2_FS_SECURITY
+#ifdef CONFIG_LLFS_FS_SECURITY
 	[EXT2_XATTR_INDEX_SECURITY]	     = &ext2_xattr_security_handler,
 #endif
 };
@@ -115,11 +115,11 @@ static struct xattr_handler *ext2_xattr_handler_map[] = {
 struct xattr_handler *ext2_xattr_handlers[] = {
 	&ext2_xattr_user_handler,
 	&ext2_xattr_trusted_handler,
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 	&ext2_xattr_acl_access_handler,
 	&ext2_xattr_acl_default_handler,
 #endif
-#ifdef CONFIG_EXT2_FS_SECURITY
+#ifdef CONFIG_LLFS_FS_SECURITY
 	&ext2_xattr_security_handler,
 #endif
 	NULL

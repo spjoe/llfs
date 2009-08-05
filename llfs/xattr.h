@@ -53,7 +53,7 @@ struct ext2_xattr_entry {
 #define EXT2_XATTR_SIZE(size) \
 	(((size) + EXT2_XATTR_ROUND) & ~EXT2_XATTR_ROUND)
 
-# ifdef CONFIG_EXT2_FS_XATTR
+# ifdef CONFIG_LLFS_FS_XATTR
 
 extern struct xattr_handler ext2_xattr_user_handler;
 extern struct xattr_handler ext2_xattr_trusted_handler;
@@ -74,7 +74,7 @@ extern void exit_ext2_xattr(void);
 
 extern struct xattr_handler *ext2_xattr_handlers[];
 
-# else  /* CONFIG_EXT2_FS_XATTR */
+# else  /* CONFIG_LLFS_FS_XATTR */
 
 static inline int
 ext2_xattr_get(struct inode *inode, int name_index,
@@ -113,9 +113,9 @@ exit_ext2_xattr(void)
 
 #define ext2_xattr_handlers NULL
 
-# endif  /* CONFIG_EXT2_FS_XATTR */
+# endif  /* CONFIG_LLFS_FS_XATTR */
 
-#ifdef CONFIG_EXT2_FS_SECURITY
+#ifdef CONFIG_LLFS_FS_SECURITY
 extern int ext2_init_security(struct inode *inode, struct inode *dir);
 #else
 static inline int ext2_init_security(struct inode *inode, struct inode *dir)

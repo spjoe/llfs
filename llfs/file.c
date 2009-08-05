@@ -60,7 +60,7 @@ const struct file_operations ext2_file_operations = {
 	.splice_write	= generic_file_splice_write,
 };
 
-#ifdef CONFIG_EXT2_FS_XIP
+#ifdef CONFIG_LLFS_FS_XIP
 const struct file_operations ext2_xip_file_operations = {
 	.llseek		= generic_file_llseek,
 	.read		= xip_file_read,
@@ -78,7 +78,7 @@ const struct file_operations ext2_xip_file_operations = {
 
 const struct inode_operations ext2_file_inode_operations = {
 	.truncate	= ext2_truncate,
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	.setxattr	= generic_setxattr,
 	.getxattr	= generic_getxattr,
 	.listxattr	= ext2_listxattr,

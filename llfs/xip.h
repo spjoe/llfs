@@ -5,7 +5,7 @@
  * Author: Carsten Otte (cotte@de.ibm.com)
  */
 
-#ifdef CONFIG_EXT2_FS_XIP
+#ifdef CONFIG_LLFS_FS_XIP
 extern void ext2_xip_verify_sb (struct super_block *);
 extern int ext2_clear_xip_target (struct inode *, sector_t);
 

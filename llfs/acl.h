@@ -51,7 +51,7 @@ static inline int ext2_acl_count(size_t size)
 	}
 }
 
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 
 /* Value for inode->u.ext2_i.i_acl and inode->u.ext2_i.i_default_acl
    if the ACL has not been cached */

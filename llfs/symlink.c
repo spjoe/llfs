@@ -32,7 +32,7 @@ const struct inode_operations ext2_symlink_inode_operations = {
 	.readlink	= generic_readlink,
 	.follow_link	= page_follow_link_light,
 	.put_link	= page_put_link,
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	.setxattr	= generic_setxattr,
 	.getxattr	= generic_getxattr,
 	.listxattr	= ext2_listxattr,
@@ -43,7 +43,7 @@ const struct inode_operations ext2_symlink_inode_operations = {
 const struct inode_operations ext2_fast_symlink_inode_operations = {
 	.readlink	= generic_readlink,
 	.follow_link	= ext2_follow_link,
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	.setxattr	= generic_setxattr,
 	.getxattr	= generic_getxattr,
 	.listxattr	= ext2_listxattr,

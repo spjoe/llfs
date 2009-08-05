@@ -146,7 +146,7 @@ static struct inode *ext2_alloc_inode(struct super_block *sb)
 	ei = (struct ext2_inode_info *)kmem_cache_alloc(ext2_inode_cachep, GFP_KERNEL);
 	if (!ei)
 		return NULL;
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 	ei->i_acl = EXT2_ACL_NOT_CACHED;
 	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
 #endif
@@ -165,7 +165,7 @@ static void init_once(void *foo)
 	struct ext2_inode_info *ei = (struct ext2_inode_info *) foo;
 
 	rwlock_init(&ei->i_meta_lock);
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	init_rwsem(&ei->xattr_sem);
 #endif
 	mutex_init(&ei->truncate_mutex);
@@ -192,7 +192,7 @@ static void destroy_inodecache(void)
 static void ext2_clear_inode(struct inode *inode)
 {
 	struct ext2_block_alloc_info *rsv = EXT2_I(inode)->i_block_alloc_info;
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 	struct ext2_inode_info *ei = EXT2_I(inode);
 
 	if (ei->i_acl && ei->i_acl != EXT2_ACL_NOT_CACHED) {
@@ -254,7 +254,7 @@ static int ext2_show_options(struct seq_file *seq, struct vfsmount *vfs)
 	if (test_opt(sb, OLDALLOC))
 		seq_puts(seq, ",oldalloc");
 
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	if (test_opt(sb, XATTR_USER))
 		seq_puts(seq, ",user_xattr");
 	if (!test_opt(sb, XATTR_USER) &&
@@ -263,7 +263,7 @@ static int ext2_show_options(struct seq_file *seq, struct vfsmount *vfs)
 	}
 #endif
 
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 	if (test_opt(sb, POSIX_ACL))
 		seq_puts(seq, ",acl");
 	if (!test_opt(sb, POSIX_ACL) && (def_mount_opts & EXT2_DEFM_ACL))
@@ -281,7 +281,7 @@ static int ext2_show_options(struct seq_file *seq, struct vfsmount *vfs)
 		seq_puts(seq, ",grpquota");
 #endif
 
-#if defined(CONFIG_EXT2_FS_XIP)
+#if defined(CONFIG_LLFS_FS_XIP)
 	if (sbi->s_mount_opt & EXT2_MOUNT_XIP)
 		seq_puts(seq, ",xip");
 #endif
@@ -504,7 +504,7 @@ static int parse_options (char * options,
 		case Opt_nobh:
 			set_opt (sbi->s_mount_opt, NOBH);
 			break;
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 		case Opt_user_xattr:
 			set_opt (sbi->s_mount_opt, XATTR_USER);
 			break;
@@ -517,7 +517,7 @@ static int parse_options (char * options,
 			printk("EXT2 (no)user_xattr options not supported\n");
 			break;
 #endif
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 		case Opt_acl:
 			set_opt(sbi->s_mount_opt, POSIX_ACL);
 			break;
@@ -531,7 +531,7 @@ static int parse_options (char * options,
 			break;
 #endif
 		case Opt_xip:
-#ifdef CONFIG_EXT2_FS_XIP
+#ifdef CONFIG_LLFS_FS_XIP
 			set_opt (sbi->s_mount_opt, XIP);
 #else
 			printk("EXT2 xip option not supported\n");
@@ -814,11 +814,11 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 		set_opt(sbi->s_mount_opt, GRPID);
 	if (def_mount_opts & EXT2_DEFM_UID16)
 		set_opt(sbi->s_mount_opt, NO_UID32);
-#ifdef CONFIG_EXT2_FS_XATTR
+#ifdef CONFIG_LLFS_FS_XATTR
 	if (def_mount_opts & EXT2_DEFM_XATTR_USER)
 		set_opt(sbi->s_mount_opt, XATTR_USER);
 #endif
-#ifdef CONFIG_EXT2_FS_POSIX_ACL
+#ifdef CONFIG_LLFS_FS_POSIX_ACL
 	if (def_mount_opts & EXT2_DEFM_ACL)
 		set_opt(sbi->s_mount_opt, POSIX_ACL);
 #endif
