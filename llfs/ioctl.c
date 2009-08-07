@@ -7,7 +7,7 @@
  * Universite Pierre et Marie Curie (Paris VI)
  */
 
-#include "ext2.h"
+#include "llfs.h"
 #include <linux/capability.h>
 #include <linux/time.h>
 #include <linux/sched.h>

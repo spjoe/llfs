@@ -9,7 +9,7 @@
 #include <linux/string.h>
 #include <linux/capability.h>
 #include <linux/fs.h>
-#include <linux/ext2_fs.h>
+#include "llfs_fs.h"
 #include "xattr.h"
 
 static size_t

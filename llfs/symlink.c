@@ -17,7 +17,7 @@
  *  ext2 symlink handling code
  */
 
-#include "ext2.h"
+#include "llfs.h"
 #include "xattr.h"
 #include <linux/namei.h>
 

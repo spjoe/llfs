@@ -1,5 +1,5 @@
 #include <linux/fs.h>
-#include <linux/ext2_fs.h>
+#include "llfs_fs.h"
 
 /*
  * ext2 mount options

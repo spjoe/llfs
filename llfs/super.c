@@ -33,7 +33,7 @@
 #include <linux/log2.h>
 #include <linux/quotaops.h>
 #include <asm/uaccess.h>
-#include "ext2.h"
+#include "llfs.h"
 #include "xattr.h"
 #include "acl.h"
 #include "xip.h"

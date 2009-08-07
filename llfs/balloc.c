@@ -11,7 +11,7 @@
  *        David S. Miller (davem@caip.rutgers.edu), 1995
  */
 
-#include "ext2.h"
+#include "llfs.h"
 #include <linux/quotaops.h>
 #include <linux/sched.h>
 #include <linux/buffer_head.h>
