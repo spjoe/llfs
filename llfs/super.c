@@ -974,7 +974,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 	sbi->s_desc_per_block_bits =
 		ilog2 (EXT2_DESC_PER_BLOCK(sb));
 
-	if (sb->s_magic != EXT2_SUPER_MAGIC)
+	if (sb->s_magic != LLFS_SUPER_MAGIC)
 		goto cantfind_ext2;
 
 	if (sb->s_blocksize != bh->b_size) {
