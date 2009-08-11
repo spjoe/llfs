@@ -925,7 +925,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 		}
 		es = (struct ext2_super_block *) (((char *)bh->b_data) + offset);
 		sbi->s_es = es;
-		if (es->s_magic != cpu_to_le16(EXT2_SUPER_MAGIC)) {
+		if (es->s_magic != cpu_to_le16(LLFS_SUPER_MAGIC)) {
 			printk ("EXT2-fs: Magic mismatch, very weird !\n");
 			goto failed_mount;
 		}
