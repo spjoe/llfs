@@ -753,6 +753,10 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 	int i, j;
 	__le32 features;
 	int err;
+	u32 *BITMAP_INDEX;
+	u32 *BITMAP_INDEX_START;
+
+	
 
 	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
 	if (!sbi)
@@ -764,6 +768,27 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 		kfree(sbi);
 		return -ENOMEM;
 	}
+
+	BITMAP_INDEX = kzalloc(sizeof(u32) * LLFS_MAX_CLONES, GFP_KERNEL);
+	if(!BITMAP_INDEX){
+		kfree(sbi);
+		kfree(sbi->s_blockgroup_lock);
+		return -ENOMEM;
+	}
+
+	BITMAP_INDEX_START = kzalloc(sizeof(u32) * LLFS_MAX_CLONES, GFP_KERNEL);
+	if(!BITMAP_INDEX_START){
+		kfree(sbi);
+		kfree(sbi->s_blockgroup_lock);
+		kfree(BITMAP_INDEX);
+		return -ENOMEM;
+	}
+
+	for (i = 0; i < LLFS_MAX_CLONES; i++) {
+		BITMAP_INDEX[i] = 0;
+		BITMAP_INDEX_START[i] = 0;
+	}
+
 	sb->s_fs_info = sbi;
 	sbi->s_sb_block = sb_block;
 
@@ -803,7 +828,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 	sbi->s_es = es;
 	sb->s_magic = le16_to_cpu(es->s_magic);
 
-	if (sb->s_magic != EXT2_SUPER_MAGIC)
+	if (sb->s_magic != LLFS_SUPER_MAGIC)
 		goto cantfind_ext2;
 
 	/* Set defaults before we parse the mount options */

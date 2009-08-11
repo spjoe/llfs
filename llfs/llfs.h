@@ -1,6 +1,7 @@
 #include <linux/fs.h>
 #include "llfs_fs.h"
 
+#define LLFS_MAX_CLONES 10
 /*
  * ext2 mount options
  */

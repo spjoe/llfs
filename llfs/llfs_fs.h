@@ -65,6 +65,8 @@
 /* First non-reserved inode for old ext2 filesystems */
 #define EXT2_GOOD_OLD_FIRST_INO	11
 
+#define LLFS_SUPER_MAGIC	0xD2F1
+
 #ifdef __KERNEL__
 #include "llfs_fs_sb.h"
 static inline struct ext2_sb_info *EXT2_SB(struct super_block *sb)
