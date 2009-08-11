@@ -756,7 +756,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 	u32 *BITMAP_INDEX;
 	u32 *BITMAP_INDEX_START;
 
-	
+	llfs_debug("ext2_fill_super: start...")
 
 	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
 	if (!sbi)

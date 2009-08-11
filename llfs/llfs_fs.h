@@ -27,6 +27,7 @@
  * Define EXT2FS_DEBUG to produce debug messages
  */
 #undef EXT2FS_DEBUG
+#define LLFS_DEBUG
 
 /*
  * Define EXT2_RESERVATION to reserve data blocks for expanding files
@@ -52,6 +53,15 @@
 					}
 #else
 #	define ext2_debug(f, a...)	/**/
+#endif
+#ifdef LLFS_DEBUG
+#	define llfs_debug(f, a...)	{ \
+					printk ("LLFS-fs DEBUG (%s, %d): %s:", \
+						__FILE__, __LINE__, __func__); \
+				  	printk (f, ## a); \
+					}
+#else
+#	define llfs_debug(f, a...)	/**/
 #endif
 
 /*
