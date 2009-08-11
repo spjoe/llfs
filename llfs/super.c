@@ -828,7 +828,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 	sbi->s_es = es;
 	sb->s_magic = le16_to_cpu(es->s_magic);
 
-	if (sb->s_magic != EXT2_SUPER_MAGIC)
+	if (sb->s_magic != LLFS_SUPER_MAGIC)
 		goto cantfind_ext2;
 
 	/* Set defaults before we parse the mount options */

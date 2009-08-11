@@ -1992,7 +1992,7 @@ static int should_do_undo(const char *name)
 	s_magic = super.s_magic;
 #endif
 
-	if (s_magic == EXT2_SUPER_MAGIC)
+	if (s_magic == LLFS_SUPER_MAGIC)
 		retval = 1;
 
 err_out:

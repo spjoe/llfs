@@ -98,6 +98,8 @@ typedef struct struct_ext2_filsys *ext2_filsys;
 #define EXT2FS_UNMARK_ERROR 	1
 #define EXT2FS_TEST_ERROR	2
 
+#define LLFS_SUPER_MAGIC	0xD2F1
+
 typedef struct ext2fs_struct_generic_bitmap *ext2fs_generic_bitmap;
 typedef struct ext2fs_struct_generic_bitmap *ext2fs_inode_bitmap;
 typedef struct ext2fs_struct_generic_bitmap *ext2fs_block_bitmap;

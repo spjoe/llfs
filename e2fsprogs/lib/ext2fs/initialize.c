@@ -145,7 +145,7 @@ errcode_t ext2fs_initialize(const char *name, int flags,
 #define set_field(field, default) (super->field = param->field ? \
 				   param->field : (default))
 
-	super->s_magic = EXT2_SUPER_MAGIC;
+	super->s_magic = LLFS_SUPER_MAGIC;
 	super->s_state = EXT2_VALID_FS;
 
 	set_field(s_log_block_size, 0);	/* default blocksize: 1024 bytes */
