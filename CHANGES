@@ -1,0 +1,7 @@
+rasto(llfs 0.0.1) vs. this
+LLFS_MAGIC hinzugefügt (Da es meiner Meinung nach nicht möglich llfs als extension von ext2 zu basteln und somit ist sicher gestellt das nur llfs treiber mounten kann)
+llfs nicht als kernel patch sondern als externes modul, das soll die wartbarkeit erhöhen
+ext2 von 2.6.16, jetzt geh ich von ext 2.6.31 aus, damit das alles aktueller bleibt
+
+0.0.2 ist die erste version von mir, hat leider noch absolut keine llfs features, aber es ist ein funktionierendes fs
+
