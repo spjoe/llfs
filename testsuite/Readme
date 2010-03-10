@@ -1,0 +1,99 @@
+Was ist llfs Test-Packet?
+Eine Anleitung zum erstellen eines Tests System zum testen von llfs!
+
+Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses Testsystem basiert auf einer emulierten Maschine mittels kvm. Es sollte aber ohne große Änderungen auch für andere Virtualisierungen wie auch für User Mode Linux funktionieren. Es wurde kvm gewählt, weil es unter Linux ein leicht zu bedienende VM-System ist.
+
+1. DIE TESTUMGEBUNG
+
+1.1 Schrittweise Erklärung zum Aufbau der Testumgebung
+
+Ich werde möglichst genau beschreiben wie mein Test-System konfiguriert ist damit man die Ergebnisse leicht verifizieren kann.
+
+Auf dem Host muss eine Virtuelle Maschine installiert werden. Für das root Verzeichnis sollte Platz für 4GB zu Verfügung stehen. Des weiteren sollte man eine weiteres Image oder Festplatte für die llfs Partitionen bereit stellen.
+Das Gastsystem sollte auf eine i686 Architektur laufen und mit maximal 1 CPU da SMP von llfs nicht unterstützt wird! Des weiteren sind 128MB RAM sicherlich ausreichend. Als Basis habe ich debian edge 4.0r8 netdist gewählt. Ein Image ist unter http://cdimage.debian.org/cdimage/archive/4.0_r8/i386/iso-cd/debian-40r8-i386-netinst.iso verfügbar. Bei der Installation des Gastes auf unötiges verzichten.
+
+Die folgenden schritte sind auf dem Gast durchzuführen. Meine Annahmen sind, dass das Gastsystem Zugriff auf das Internet hat.
+--------------------------------------------------------------------------------
+apt-get install openssh-server #falls nötig
+cd /usr/src
+wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2
+wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2.sign
+gpg --keyserver wwwkeys.pgp.net --recv-keys 0x517D0F0E
+gpg --verify linux-2.6.16.tar.bz2.sign linux-2.6.16.tar.bz2
+apt-get install bzip2
+tar xvjf linux-2.6.16.tar.bz2
+wget http://www.complang.tuwien.ac.at/rasto/llfs-source/llfs-0.0.1.tar.gz
+wget http://www.complang.tuwien.ac.at/rasto/llfs-source/llfs.0.0.1.patch
+
+cd /root
+wget http://www.complang.tuwien.ac.at/rasto/llfs-source/e2fsprogs-1.41.0.llfs.tar.gz
+cd /usr/src
+patch -p0 -i llfs.0.0.1.patch
+
+tar xzvf llfs-0.0.1.tar.gz 
+mv llfs-0.0.1 linux-2.6.16/fs/llfs
+ln -s linux-2.6.16 linux
+cd linux
+apt-get install build-essential
+apt-get install libncurses5-dev # für menuconfig
+--------------------------------------------------------------------------------
+
+Als nächstes muss der Kernel Konfiguriert werden. Diese hängt sehr davon ab wie die Virtuelle Maschine konfiguriert ist. Aber einige Sachen sind einzuhalten da sonst llfs nicht kompiliert.
+
+make [YOUR CONFIG FAVORITE]
+"Preempt the Big Kernel Lock" in "Processor type and features" deaktivieren.
+"Symmetric multi-processing support" in "Processor type and features" deaktivieren.
+"llfs fs support" in "File systems" auf M setzen.
+Alle Second extended fs support features deaktivieren, das sind "Ext2 extended attributes","Ext2 execute in place support".
+
+Danach mittels:
+
+make
+make modules_install
+make install
+
+Den Kernel normal kompilieren und installieren. Eventuelle Anpassung des Bootloaders. Z.b. bei grub, in die Datei /boot/grub/menu.lst einen Eintrag für den neuen Kernel machen.
+
+VM auschalten und dann mit 2.6.16 Kernel booten.
+
+Nun muss noch mkllfs komiliert werden
+--------------------------------------------------------------------------------
+cd /root
+tar xzvf e2fsprogs-1.41.0.llfs.tar.gz
+cd e2fsprogs-1.41.0.llfs
+mkdir build
+cd build
+../configure
+make
+
+cd /
+mkdir llfs0;mkdir llfs1;mkdir llfs2;mkdir llfs3;mkdir llfs4; 
+mkdir llfs5;mkdir llfs6;mkdir llfs7;mkdir llfs8;mkdir llfs9;
+--------------------------------------------------------------------------------
+
+/dev/hdb partitionieren, es muss ein /dev/hdb1 erzeugt werden.
+
+
+cd /root
+tar xvjf llfs-test-suit.tar.bz2
+
+1.2 Ausführen der Tests
+cd /root/tests
+./test[1-3].sh
+
+
+2. Mini Cleanup
+Es muss sowohl das llfs Modul als auch e2fsprogs gepatcht werden.
+cd /root
+cd /usr/src/linux/fs
+patch -p0 -i /root/patches/llfs.minicleanup.patch 
+
+cd /root
+patch -p0 -i /root/patches/e2fsprogs.llfs.minicleanup.patch
+
+Neu Kompilierung von Kernel, nun kann man ext2 wieder beliebig konfigurieren.
+
+
+Diese Patches beheben das ext config problem und gibt llfs eine eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer ext2 verwechselt werden.
+
+

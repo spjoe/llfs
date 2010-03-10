@@ -1,0 +1,54 @@
+diff -crB e2fsprogs-1.41.0.llfs/lib/ext2fs/ext2fs.h e2fsprogs-1.41.0.llfs.minicleanup/lib/ext2fs/ext2fs.h
+*** e2fsprogs-1.41.0.llfs/lib/ext2fs/ext2fs.h	2008-07-18 14:23:07.000000000 +0200
+--- e2fsprogs-1.41.0.llfs.minicleanup/lib/ext2fs/ext2fs.h	2010-03-07 13:42:26.000000000 +0100
+***************
+*** 98,103 ****
+--- 98,105 ----
+  #define EXT2FS_UNMARK_ERROR 	1
+  #define EXT2FS_TEST_ERROR	2
+  
++ #define LLFS_SUPER_MAGIC	0xD2F1
++ 
+  typedef struct ext2fs_struct_generic_bitmap *ext2fs_generic_bitmap;
+  typedef struct ext2fs_struct_generic_bitmap *ext2fs_inode_bitmap;
+  typedef struct ext2fs_struct_generic_bitmap *ext2fs_block_bitmap;
+diff -crB e2fsprogs-1.41.0.llfs/lib/ext2fs/initialize.c e2fsprogs-1.41.0.llfs.minicleanup/lib/ext2fs/initialize.c
+*** e2fsprogs-1.41.0.llfs/lib/ext2fs/initialize.c	2008-07-18 14:23:09.000000000 +0200
+--- e2fsprogs-1.41.0.llfs.minicleanup/lib/ext2fs/initialize.c	2010-03-07 13:41:01.000000000 +0100
+***************
+*** 145,151 ****
+  #define set_field(field, default) (super->field = param->field ? \
+  				   param->field : (default))
+  
+! 	super->s_magic = EXT2_SUPER_MAGIC;
+  	super->s_state = EXT2_VALID_FS;
+  
+  	set_field(s_log_block_size, 0);	/* default blocksize: 1024 bytes */
+--- 145,151 ----
+  #define set_field(field, default) (super->field = param->field ? \
+  				   param->field : (default))
+  
+! 	super->s_magic = LLFS_SUPER_MAGIC;
+  	super->s_state = EXT2_VALID_FS;
+  
+  	set_field(s_log_block_size, 0);	/* default blocksize: 1024 bytes */
+diff -crB e2fsprogs-1.41.0.llfs/misc/mkllfs.c e2fsprogs-1.41.0.llfs.minicleanup/misc/mkllfs.c
+*** e2fsprogs-1.41.0.llfs/misc/mkllfs.c	2008-10-14 10:32:06.000000000 +0200
+--- e2fsprogs-1.41.0.llfs.minicleanup/misc/mkllfs.c	2010-03-07 13:40:26.000000000 +0100
+***************
+*** 1992,1998 ****
+  	s_magic = super.s_magic;
+  #endif
+  
+! 	if (s_magic == EXT2_SUPER_MAGIC)
+  		retval = 1;
+  
+  err_out:
+--- 1992,1998 ----
+  	s_magic = super.s_magic;
+  #endif
+  
+! 	if (s_magic == LLFS_SUPER_MAGIC)
+  		retval = 1;
+  
+  err_out:

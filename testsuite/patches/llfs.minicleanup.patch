@@ -1,0 +1,556 @@
+diff -crB llfs/acl.h llfs.minicleanup/acl.h
+*** llfs/acl.h	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/acl.h	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 51,57 ****
+  	}
+  }
+  
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  
+  /* Value for inode->u.ext2_i.i_acl and inode->u.ext2_i.i_default_acl
+     if the ACL has not been cached */
+--- 51,57 ----
+  	}
+  }
+  
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  
+  /* Value for inode->u.ext2_i.i_acl and inode->u.ext2_i.i_default_acl
+     if the ACL has not been cached */
+diff -crB llfs/ext2.h llfs.minicleanup/ext2.h
+*** llfs/ext2.h	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/ext2.h	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 51,57 ****
+  	__u32	i_prealloc_count;
+  	__u32	i_dir_start_lookup;
+  	__u16	i_clonenr; // not used, but should be in the future.
+! #ifdef CONFIG_EXT2_FS_XATTR
+  	/*
+  	 * Extended attributes can be read independently of the main file
+  	 * data. Taking i_mutex even when reading would cause contention
+--- 51,57 ----
+  	__u32	i_prealloc_count;
+  	__u32	i_dir_start_lookup;
+  	__u16	i_clonenr; // not used, but should be in the future.
+! #ifdef CONFIG_LLFS_FS_XATTR
+  	/*
+  	 * Extended attributes can be read independently of the main file
+  	 * data. Taking i_mutex even when reading would cause contention
+***************
+*** 61,67 ****
+  	 */
+  	struct rw_semaphore xattr_sem;
+  #endif
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  	struct posix_acl	*i_acl;
+  	struct posix_acl	*i_default_acl;
+  #endif
+--- 61,67 ----
+  	 */
+  	struct rw_semaphore xattr_sem;
+  #endif
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  	struct posix_acl	*i_acl;
+  	struct posix_acl	*i_default_acl;
+  #endif
+diff -crB llfs/file.c llfs.minicleanup/file.c
+*** llfs/file.c	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/file.c	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 55,61 ****
+  	.sendfile	= generic_file_sendfile,
+  };
+  
+! #ifdef CONFIG_EXT2_FS_XIP
+  struct file_operations ext2_xip_file_operations = {
+  	.llseek		= generic_file_llseek,
+  	.read		= xip_file_read,
+--- 55,61 ----
+  	.sendfile	= generic_file_sendfile,
+  };
+  
+! #ifdef CONFIG_LLFS_FS_XIP
+  struct file_operations ext2_xip_file_operations = {
+  	.llseek		= generic_file_llseek,
+  	.read		= xip_file_read,
+***************
+*** 71,77 ****
+  
+  struct inode_operations ext2_file_inode_operations = {
+  	.truncate	= ext2_truncate,
+! #ifdef CONFIG_EXT2_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+--- 71,77 ----
+  
+  struct inode_operations ext2_file_inode_operations = {
+  	.truncate	= ext2_truncate,
+! #ifdef CONFIG_LLFS_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+diff -crB llfs/inode.c llfs.minicleanup/inode.c
+*** llfs/inode.c	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/inode.c	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 1316,1322 ****
+  	} else {
+  	}
+  
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  	ei->i_acl = EXT2_ACL_NOT_CACHED;
+  	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
+  #endif
+--- 1316,1322 ----
+  	} else {
+  	}
+  
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  	ei->i_acl = EXT2_ACL_NOT_CACHED;
+  	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
+  #endif
+***************
+*** 1447,1453 ****
+  	ino = llfs_get_disk_ino(inode->i_sb, ino);
+  	raw_inode = llfs_get_inode_read(inode->i_sb, ino, &bh, clonenr); //!!!!!!!
+  
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  	ei->i_acl = EXT2_ACL_NOT_CACHED;
+  	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
+  #endif
+--- 1447,1453 ----
+  	ino = llfs_get_disk_ino(inode->i_sb, ino);
+  	raw_inode = llfs_get_inode_read(inode->i_sb, ino, &bh, clonenr); //!!!!!!!
+  
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  	ei->i_acl = EXT2_ACL_NOT_CACHED;
+  	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
+  #endif
+diff -crB llfs/namei.c llfs.minicleanup/namei.c
+*** llfs/namei.c	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/namei.c	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 226,232 ****
+  	err = PTR_ERR(inode);
+  	if (!IS_ERR(inode)) {
+  		init_special_inode(inode, inode->i_mode, rdev);
+! #ifdef CONFIG_EXT2_FS_XATTR
+  		inode->i_op = &ext2_special_inode_operations;
+  #endif
+  		mark_inode_dirty(inode);
+--- 226,232 ----
+  	err = PTR_ERR(inode);
+  	if (!IS_ERR(inode)) {
+  		init_special_inode(inode, inode->i_mode, rdev);
+! #ifdef CONFIG_LLFS_FS_XATTR
+  		inode->i_op = &ext2_special_inode_operations;
+  #endif
+  		mark_inode_dirty(inode);
+***************
+*** 474,480 ****
+  	.rmdir		= ext2_rmdir,
+  	.mknod		= ext2_mknod,
+  	.rename		= ext2_rename,
+! #ifdef CONFIG_EXT2_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+--- 474,480 ----
+  	.rmdir		= ext2_rmdir,
+  	.mknod		= ext2_mknod,
+  	.rename		= ext2_rename,
+! #ifdef CONFIG_LLFS_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+***************
+*** 485,491 ****
+  };
+  
+  struct inode_operations ext2_special_inode_operations = {
+! #ifdef CONFIG_EXT2_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+--- 485,491 ----
+  };
+  
+  struct inode_operations ext2_special_inode_operations = {
+! #ifdef CONFIG_LLFS_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+diff -crB llfs/super.c llfs.minicleanup/super.c
+*** llfs/super.c	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/super.c	2010-03-07 13:57:12.000000000 +0100
+***************
+*** 37,42 ****
+--- 37,44 ----
+  #include "xip.h"
+  #include "llfs.h"
+  
++ #define LLFS_SUPER_MAGIC	0xD2F1
++ 
+  static void ext2_sync_super(struct super_block *sb,
+  			    struct ext2_super_block *es);
+  static int ext2_remount (struct super_block * sb, int * flags, char * data);
+***************
+*** 170,176 ****
+  	ei = (struct ext2_inode_info *)kmem_cache_alloc(ext2_inode_cachep, SLAB_KERNEL);
+  	if (!ei)
+  		return NULL;
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  	ei->i_acl = EXT2_ACL_NOT_CACHED;
+  	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
+  #endif
+--- 172,178 ----
+  	ei = (struct ext2_inode_info *)kmem_cache_alloc(ext2_inode_cachep, SLAB_KERNEL);
+  	if (!ei)
+  		return NULL;
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  	ei->i_acl = EXT2_ACL_NOT_CACHED;
+  	ei->i_default_acl = EXT2_ACL_NOT_CACHED;
+  #endif
+***************
+*** 190,196 ****
+  	if ((flags & (SLAB_CTOR_VERIFY|SLAB_CTOR_CONSTRUCTOR)) ==
+  	    SLAB_CTOR_CONSTRUCTOR) {
+  		rwlock_init(&ei->i_meta_lock);
+! #ifdef CONFIG_EXT2_FS_XATTR
+  		init_rwsem(&ei->xattr_sem);
+  #endif
+  		inode_init_once(&ei->vfs_inode);
+--- 192,198 ----
+  	if ((flags & (SLAB_CTOR_VERIFY|SLAB_CTOR_CONSTRUCTOR)) ==
+  	    SLAB_CTOR_CONSTRUCTOR) {
+  		rwlock_init(&ei->i_meta_lock);
+! #ifdef CONFIG_LLFS_FS_XATTR
+  		init_rwsem(&ei->xattr_sem);
+  #endif
+  		inode_init_once(&ei->vfs_inode);
+***************
+*** 216,222 ****
+  
+  static void ext2_clear_inode(struct inode *inode)
+  {
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  	struct ext2_inode_info *ei = EXT2_I(inode);
+  
+  	if (ei->i_acl && ei->i_acl != EXT2_ACL_NOT_CACHED) {
+--- 218,224 ----
+  
+  static void ext2_clear_inode(struct inode *inode)
+  {
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  	struct ext2_inode_info *ei = EXT2_I(inode);
+  
+  	if (ei->i_acl && ei->i_acl != EXT2_ACL_NOT_CACHED) {
+***************
+*** 247,253 ****
+  		seq_puts(seq, ",grpquota");
+  #endif
+  
+! #if defined(CONFIG_EXT2_FS_XIP)
+  	if (sbi->s_mount_opt & EXT2_MOUNT_XIP)
+  		seq_puts(seq, ",xip");
+  #endif
+--- 249,255 ----
+  		seq_puts(seq, ",grpquota");
+  #endif
+  
+! #if defined(CONFIG_LLFS_FS_XIP)
+  	if (sbi->s_mount_opt & EXT2_MOUNT_XIP)
+  		seq_puts(seq, ",xip");
+  #endif
+***************
+*** 422,428 ****
+  		case Opt_nobh:
+  			set_opt (sbi->s_mount_opt, NOBH);
+  			break;
+! #ifdef CONFIG_EXT2_FS_XATTR
+  		case Opt_user_xattr:
+  			set_opt (sbi->s_mount_opt, XATTR_USER);
+  			break;
+--- 424,430 ----
+  		case Opt_nobh:
+  			set_opt (sbi->s_mount_opt, NOBH);
+  			break;
+! #ifdef CONFIG_LLFS_FS_XATTR
+  		case Opt_user_xattr:
+  			set_opt (sbi->s_mount_opt, XATTR_USER);
+  			break;
+***************
+*** 435,441 ****
+  			printk("EXT2 (no)user_xattr options not supported\n");
+  			break;
+  #endif
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  		case Opt_acl:
+  			set_opt(sbi->s_mount_opt, POSIX_ACL);
+  			break;
+--- 437,443 ----
+  			printk("EXT2 (no)user_xattr options not supported\n");
+  			break;
+  #endif
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  		case Opt_acl:
+  			set_opt(sbi->s_mount_opt, POSIX_ACL);
+  			break;
+***************
+*** 449,455 ****
+  			break;
+  #endif
+  		case Opt_xip:
+! #ifdef CONFIG_EXT2_FS_XIP
+  			set_opt (sbi->s_mount_opt, XIP);
+  #else
+  			printk("EXT2 xip option not supported\n");
+--- 451,457 ----
+  			break;
+  #endif
+  		case Opt_xip:
+! #ifdef CONFIG_LLFS_FS_XIP
+  			set_opt (sbi->s_mount_opt, XIP);
+  #else
+  			printk("EXT2 xip option not supported\n");
+***************
+*** 662,668 ****
+  	sbi->s_es = es;
+  	sb->s_magic = le16_to_cpu(es->s_magic);
+  
+! 	if (sb->s_magic != EXT2_SUPER_MAGIC)
+  		goto cantfind_ext2;
+  
+  	/* Set defaults before we parse the mount options */
+--- 664,670 ----
+  	sbi->s_es = es;
+  	sb->s_magic = le16_to_cpu(es->s_magic);
+  
+! 	if (sb->s_magic != LLFS_SUPER_MAGIC)
+  		goto cantfind_ext2;
+  
+  	/* Set defaults before we parse the mount options */
+***************
+*** 756,762 ****
+  		}
+  		es = (struct ext2_super_block *) (((char *)bh->b_data) + offset);
+  		sbi->s_es = es;
+! 		if (es->s_magic != cpu_to_le16(EXT2_SUPER_MAGIC)) {
+  			printk ("EXT2-fs: Magic mismatch, very weird !\n");
+  			goto failed_mount;
+  		}
+--- 758,764 ----
+  		}
+  		es = (struct ext2_super_block *) (((char *)bh->b_data) + offset);
+  		sbi->s_es = es;
+! 		if (es->s_magic != cpu_to_le16(LLFS_SUPER_MAGIC)) {
+  			printk ("EXT2-fs: Magic mismatch, very weird !\n");
+  			goto failed_mount;
+  		}
+***************
+*** 805,811 ****
+  	sbi->s_desc_per_block_bits =
+  		log2 (EXT2_DESC_PER_BLOCK(sb));
+  
+! 	if (sb->s_magic != EXT2_SUPER_MAGIC)
+  		goto cantfind_ext2;
+  
+  	if (sb->s_blocksize != bh->b_size) {
+--- 807,813 ----
+  	sbi->s_desc_per_block_bits =
+  		log2 (EXT2_DESC_PER_BLOCK(sb));
+  
+! 	if (sb->s_magic != LLFS_SUPER_MAGIC)
+  		goto cantfind_ext2;
+  
+  	if (sb->s_blocksize != bh->b_size) {
+***************
+*** 1148,1154 ****
+  		//	     (2 + sbi->s_itb_per_group));
+  	}
+  
+! 	buf->f_type = EXT2_SUPER_MAGIC;
+  	buf->f_bsize = sb->s_blocksize;
+  
+  	buf->f_blocks = le32_to_cpu(sbi->s_es->s_blocks_count) - overhead;
+--- 1150,1156 ----
+  		//	     (2 + sbi->s_itb_per_group));
+  	}
+  
+! 	buf->f_type = LLFS_SUPER_MAGIC;
+  	buf->f_bsize = sb->s_blocksize;
+  
+  	buf->f_blocks = le32_to_cpu(sbi->s_es->s_blocks_count) - overhead;
+diff -crB llfs/symlink.c llfs.minicleanup/symlink.c
+*** llfs/symlink.c	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/symlink.c	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 32,38 ****
+  	.readlink	= generic_readlink,
+  	.follow_link	= page_follow_link_light,
+  	.put_link	= page_put_link,
+! #ifdef CONFIG_EXT2_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+--- 32,38 ----
+  	.readlink	= generic_readlink,
+  	.follow_link	= page_follow_link_light,
+  	.put_link	= page_put_link,
+! #ifdef CONFIG_LLFS_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+***************
+*** 43,49 ****
+  struct inode_operations ext2_fast_symlink_inode_operations = {
+  	.readlink	= generic_readlink,
+  	.follow_link	= ext2_follow_link,
+! #ifdef CONFIG_EXT2_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+--- 43,49 ----
+  struct inode_operations ext2_fast_symlink_inode_operations = {
+  	.readlink	= generic_readlink,
+  	.follow_link	= ext2_follow_link,
+! #ifdef CONFIG_LLFS_FS_XATTR
+  	.setxattr	= generic_setxattr,
+  	.getxattr	= generic_getxattr,
+  	.listxattr	= ext2_listxattr,
+diff -crB llfs/xattr.c llfs.minicleanup/xattr.c
+*** llfs/xattr.c	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/xattr.c	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 102,113 ****
+  
+  static struct xattr_handler *ext2_xattr_handler_map[] = {
+  	[EXT2_XATTR_INDEX_USER]		     = &ext2_xattr_user_handler,
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  	[EXT2_XATTR_INDEX_POSIX_ACL_ACCESS]  = &ext2_xattr_acl_access_handler,
+  	[EXT2_XATTR_INDEX_POSIX_ACL_DEFAULT] = &ext2_xattr_acl_default_handler,
+  #endif
+  	[EXT2_XATTR_INDEX_TRUSTED]	     = &ext2_xattr_trusted_handler,
+! #ifdef CONFIG_EXT2_FS_SECURITY
+  	[EXT2_XATTR_INDEX_SECURITY]	     = &ext2_xattr_security_handler,
+  #endif
+  };
+--- 102,113 ----
+  
+  static struct xattr_handler *ext2_xattr_handler_map[] = {
+  	[EXT2_XATTR_INDEX_USER]		     = &ext2_xattr_user_handler,
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  	[EXT2_XATTR_INDEX_POSIX_ACL_ACCESS]  = &ext2_xattr_acl_access_handler,
+  	[EXT2_XATTR_INDEX_POSIX_ACL_DEFAULT] = &ext2_xattr_acl_default_handler,
+  #endif
+  	[EXT2_XATTR_INDEX_TRUSTED]	     = &ext2_xattr_trusted_handler,
+! #ifdef CONFIG_LLFS_FS_SECURITY
+  	[EXT2_XATTR_INDEX_SECURITY]	     = &ext2_xattr_security_handler,
+  #endif
+  };
+***************
+*** 115,125 ****
+  struct xattr_handler *ext2_xattr_handlers[] = {
+  	&ext2_xattr_user_handler,
+  	&ext2_xattr_trusted_handler,
+! #ifdef CONFIG_EXT2_FS_POSIX_ACL
+  	&ext2_xattr_acl_access_handler,
+  	&ext2_xattr_acl_default_handler,
+  #endif
+! #ifdef CONFIG_EXT2_FS_SECURITY
+  	&ext2_xattr_security_handler,
+  #endif
+  	NULL
+--- 115,125 ----
+  struct xattr_handler *ext2_xattr_handlers[] = {
+  	&ext2_xattr_user_handler,
+  	&ext2_xattr_trusted_handler,
+! #ifdef CONFIG_LLFS_FS_POSIX_ACL
+  	&ext2_xattr_acl_access_handler,
+  	&ext2_xattr_acl_default_handler,
+  #endif
+! #ifdef CONFIG_LLFS_FS_SECURITY
+  	&ext2_xattr_security_handler,
+  #endif
+  	NULL
+diff -crB llfs/xattr.h llfs.minicleanup/xattr.h
+*** llfs/xattr.h	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/xattr.h	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 54,60 ****
+  #define EXT2_XATTR_SIZE(size) \
+  	(((size) + EXT2_XATTR_ROUND) & ~EXT2_XATTR_ROUND)
+  
+! # ifdef CONFIG_EXT2_FS_XATTR
+  
+  extern struct xattr_handler ext2_xattr_user_handler;
+  extern struct xattr_handler ext2_xattr_trusted_handler;
+--- 54,60 ----
+  #define EXT2_XATTR_SIZE(size) \
+  	(((size) + EXT2_XATTR_ROUND) & ~EXT2_XATTR_ROUND)
+  
+! # ifdef CONFIG_LLFS_FS_XATTR
+  
+  extern struct xattr_handler ext2_xattr_user_handler;
+  extern struct xattr_handler ext2_xattr_trusted_handler;
+***************
+*** 75,81 ****
+  
+  extern struct xattr_handler *ext2_xattr_handlers[];
+  
+! # else  /* CONFIG_EXT2_FS_XATTR */
+  
+  static inline int
+  ext2_xattr_get(struct inode *inode, int name_index,
+--- 75,81 ----
+  
+  extern struct xattr_handler *ext2_xattr_handlers[];
+  
+! # else  /* CONFIG_LLFS_FS_XATTR */
+  
+  static inline int
+  ext2_xattr_get(struct inode *inode, int name_index,
+***************
+*** 114,122 ****
+  
+  #define ext2_xattr_handlers NULL
+  
+! # endif  /* CONFIG_EXT2_FS_XATTR */
+  
+! #ifdef CONFIG_EXT2_FS_SECURITY
+  extern int ext2_init_security(struct inode *inode, struct inode *dir);
+  #else
+  static inline int ext2_init_security(struct inode *inode, struct inode *dir)
+--- 114,122 ----
+  
+  #define ext2_xattr_handlers NULL
+  
+! # endif  /* CONFIG_LLFS_FS_XATTR */
+  
+! #ifdef CONFIG_LLFS_FS_SECURITY
+  extern int ext2_init_security(struct inode *inode, struct inode *dir);
+  #else
+  static inline int ext2_init_security(struct inode *inode, struct inode *dir)
+diff -crB llfs/xip.h llfs.minicleanup/xip.h
+*** llfs/xip.h	2010-03-06 16:54:48.000000000 +0100
+--- llfs.minicleanup/xip.h	2010-03-06 16:56:28.000000000 +0100
+***************
+*** 5,11 ****
+   * Author: Carsten Otte (cotte@de.ibm.com)
+   */
+  
+! #ifdef CONFIG_EXT2_FS_XIP
+  extern void ext2_xip_verify_sb (struct super_block *);
+  extern int ext2_clear_xip_target (struct inode *, int);
+  
+--- 5,11 ----
+   * Author: Carsten Otte (cotte@de.ibm.com)
+   */
+  
+! #ifdef CONFIG_LLFS_FS_XIP
+  extern void ext2_xip_verify_sb (struct super_block *);
+  extern int ext2_clear_xip_target (struct inode *, int);
+  
