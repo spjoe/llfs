@@ -23,11 +23,10 @@ fail=0
 #export comp
 #export fail
 
-#source ./simpletest.sh
+source ./simpletest.sh
 source ./test1.sh
-#source ./test2.sh
-#source ./test3.sh
+source ./test2.sh
+source ./test3.sh
 
 echo "Von $comp Test Cases sind $fail fehlgeschlagen"
-
 

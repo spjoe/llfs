@@ -7,35 +7,35 @@ echo "==========================================================================
 
 
 ./cleanup.sh
-./mount.sh 0
-touch /llfs0/test
-echo "Geschrieben von Clone0" > /llfs0/test
+lmount 0
+touch `getdir 0`/test
+echo "Geschrieben von Clone0" > `getdir 0`/test
 
 ./llfs-clone.sh 0 1
 ./llfs-clone.sh 0 2
 
-umount /llfs0
-./mount.sh 1
-echo "Added by Clone1" >> /llfs1/test
-umount /llfs1
-./mount.sh 2
-echo "Added by Clone2" >> /llfs2/test
-umount /llfs2
+lumount 0
+lmount 1
+echo "Added by Clone1" >> `getdir 1`/test
+lumount 1
+lmount 2
+echo "Added by Clone2" >> `getdir 2`/test
+lumount 2
 
-./mount.sh 0
-./mount.sh 1
-./mount.sh 2
+lmount 0
+lmount 1
+lmount 2
 
 check=0
-if diff /llfs0/test expected/expect3.1.1 > results/diff.3.1.1;
+if diff `getdir 0`/test expected/expect3.1.1 > results/diff.3.1.1;
 	then true
 	else check=1; echo "3.1.1 fehlgeschlagen"
 fi
-if diff /llfs1/test expected/expect3.1.2 > results/diff.3.1.2;
+if diff `getdir 1`/test expected/expect3.1.2 > results/diff.3.1.2;
 	then true
 	else check=1; echo "3.1.2 fehlgeschlagen"
 fi
-if diff /llfs2/test expected/expect3.1.3 > results/diff.3.1.3;
+if diff `getdir 2`/test expected/expect3.1.3 > results/diff.3.1.3;
 	then true
 	else check=1; echo "3.1.3 fehlgeschlagen"
 fi
@@ -47,6 +47,6 @@ if [ $check -eq 1 ]
 	then echo "Im Test 3 Case 1 sind Fehler aufgetreten"
 fi
 
-umount /llfs0
-umount /llfs1
-umount /llfs2
+lumount 0
+lumount 1
+lumount 2
