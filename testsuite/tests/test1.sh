@@ -1,6 +1,5 @@
-#!/bin/sh
-# Test 1 is all about file creation
-
+echo "================================================================================"
+echo "================================================================================"
 echo "Start des 1. Test, hier testen wir die Erstellung von Datein"
 echo "================================================================================"
 echo "Erster Test Case Clone 1 von Clone 0, Clone 2 von Clone 1"
@@ -17,7 +16,7 @@ llfsclone 0 1
 lumount 0
 lmount 1
 touch `getdir 1`/Clone1Step3
-llfsclone 2 1
+llfsclone 1 2
 lumount 1
 
 

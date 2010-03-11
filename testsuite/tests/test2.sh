@@ -1,5 +1,5 @@
-#!/bin/sh
-# Test 2 is all about directory creation
+echo "================================================================================"
+echo "================================================================================"
 echo "Start des 2. Test, hier testen wir die Erstellung von Verzeichnissen"
 echo "================================================================================"
 echo "Erster Test Case Clone 1 und 2 von Clone 0"
@@ -10,8 +10,8 @@ lmount 0
 mkdir `getdir 0`/Clone0Step1
 mkdir `getdir 0`/Clone0Step2
 
-./llfs-clone.sh 0 1
-./llfs-clone.sh 0 2
+llfsclone 0 1
+llfsclone 0 2
 
 lumount 0
 lmount 1

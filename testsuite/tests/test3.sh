@@ -1,5 +1,5 @@
-#!/bin/sh
-#Test 3 is all about file adding
+echo "================================================================================"
+echo "================================================================================"
 echo "Start des 3. Test, hier testen wir die Änderungen von Datein"
 echo "================================================================================"
 echo "Erster Test Case Clone 1 und 2 von Clone 0"
@@ -11,8 +11,8 @@ lmount 0
 touch `getdir 0`/test
 echo "Geschrieben von Clone0" > `getdir 0`/test
 
-./llfs-clone.sh 0 1
-./llfs-clone.sh 0 2
+llfsclone 0 1
+llfsclone 0 2
 
 lumount 0
 lmount 1

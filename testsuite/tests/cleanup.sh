@@ -4,4 +4,4 @@ modprobe -r llfs
 echo "LOAD llfs module..."
 modprobe llfs
 echo "CLEANUP THE SYSTEM"
-$MKLLFS /dev/hdb1 > /dev/null
+$MKLLFS $LLFS_DEVICE > /dev/null

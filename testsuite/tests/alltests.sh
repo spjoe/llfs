@@ -1,12 +1,13 @@
 #!/bin/sh
 
-export MKLLFS=../e2fsprogs-1.41.0.llfs/build/misc/mkllfs
+export MKLLFS=/root/e2fsprogs-1.41.0.llfs/build/misc/mkllfs
+export LLFS_DEVICE=/dev/hdb1
 
 getdir() {
 	echo "/llfs$1"
 }
 lmount() {
-	mount -t llfs /dev/hdb1 `getdir $1`
+	mount -t llfs $LLFS_DEVICE `getdir $1`
 }
 lumount() {
 	umount `getdir $1`
@@ -20,13 +21,12 @@ rm -R results
 mkdir results
 comp=0
 fail=0
-#export comp
-#export fail
 
 source ./simpletest.sh
 source ./test1.sh
 source ./test2.sh
 source ./test3.sh
+source ./test4.sh
 
 echo "Von $comp Test Cases sind $fail fehlgeschlagen"
 
