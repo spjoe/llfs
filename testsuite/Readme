@@ -1,7 +1,7 @@
 Was ist llfs?
 LLFS ist ein Dateisystem, nähere Informationen findet man hier: http://www.ub.tuwien.ac.at/dipl/2008/AC05037518.pdf
 
-Was ist llfs Test-Packet?
+Was ist dieses llfs Test-Paket?
 Beinhaltet eine Testumgebung für llfs, sowie kleine Patches für llfs.
 
 Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses Testsystem basiert auf einer emulierten Maschine mittels kvm. Es sollte aber ohne große Änderungen auch für andere Virtualisierungen wie auch für User Mode Linux funktionieren. Es wurde kvm gewählt, weil es unter Linux ein leicht zu bedienendes VM-System ist.
@@ -55,7 +55,7 @@ make
 make modules_install
 make install
 
-Den Kernel normal kompilieren und installieren. Eventuelle Anpassung des Bootloaders. Z.b. bei grub, in die Datei /boot/grub/menu.lst einen Eintrag für den neuen Kernel machen.
+Den Kernel normal kompilieren und installieren. Eventuelle Anpassung des Bootloaders. Z.b. bei grub, in die Datei /boot/grub/menu.lst einen Eintrag für den neuen Kernel erstellen.
 
 VM ausschalten und dann mit 2.6.16 Kernel booten.
 
@@ -81,8 +81,8 @@ cd /root
 tar xvjf llfs-test-suite.tar.bz2
 --------------------------------------------------------------------------------
 
-1.2 Konfiguration der Test
-In der Date alltest.sh kann das device, mount optionen, der mount punkt und das mkllfs executable gesetzt werden.
+1.2 Konfiguration der Testumgebung
+In der Datei alltests.sh kann das Gerät, die mount Optionen, der mount Punkt und das mkllfs Programm gesetzt werden.
 
 1.3 Ausführen der Tests
 Hierzu muss man folgende Befehle eingeben.
@@ -103,7 +103,7 @@ patch -p0 -i /root/patches/e2fsprogs.llfs.minicleanup.patch
 Neu Kompilierung von Kernel und mkllfs.
 
 
-Diese Patches behebt das "ext config" Problem und gibt llfs eine eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer ext2 Partition verwechselt werden.
+Diese Patches behebt das "ext2 config" Problem und gibt llfs eine eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer ext2 Partition verwechselt werden.
 
 3. Interpretation meiner Testergebnisse
 Im Archive llfs-test-suite.tar.bz2 sind im Ordner tests/results meine Ergebnisse drinnen.
@@ -112,5 +112,5 @@ Folgendes ist aus den Daten ersichtlich.
  - Ohne Cloning dürfte das Dateisystem einwandfrei funktionieren
  - Das Clonen, sowie die Snapshots funktionieren nicht
 
-Warum das Clonen nicht funktioniert ist leider noch unklar, es kann am llfs sourcecode selbst liegen oder aber auch an der Konfiguration des Kernels
+Warum das Clonen nicht funktioniert ist leider noch unklar, es kann am llfs Sourcecode selbst liegen oder aber auch an der Konfiguration des Kernels
 
