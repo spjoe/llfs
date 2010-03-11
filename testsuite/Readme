@@ -2,9 +2,9 @@ Was ist llfs?
 LLFS ist ein Dateisystem, nähere Informationen findet man hier: http://www.ub.tuwien.ac.at/dipl/2008/AC05037518.pdf
 
 Was ist llfs Test-Packet?
-Beinhaltet eine Testumgebung für llfs, sowie einen kleine Patches für llfs.
+Beinhaltet eine Testumgebung für llfs, sowie kleine Patches für llfs.
 
-Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses Testsystem basiert auf einer emulierten Maschine mittels kvm. Es sollte aber ohne große Änderungen auch für andere Virtualisierungen wie auch für User Mode Linux funktionieren. Es wurde kvm gewählt, weil es unter Linux ein leicht zu bedienende VM-System ist.
+Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses Testsystem basiert auf einer emulierten Maschine mittels kvm. Es sollte aber ohne große Änderungen auch für andere Virtualisierungen wie auch für User Mode Linux funktionieren. Es wurde kvm gewählt, weil es unter Linux ein leicht zu bedienendes VM-System ist.
 
 1. DIE TESTUMGEBUNG
 
@@ -12,10 +12,10 @@ Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses Testsystem basier
 
 Ich werde möglichst genau beschreiben wie mein Test-System konfiguriert ist damit man die Ergebnisse leicht verifizieren kann.
 
-Auf dem Host muss eine Virtuelle Maschine installiert werden. Für das root Verzeichnis sollte Platz für 4GB zu Verfügung stehen. Des weiteren sollte man eine weiteres Image oder Festplatte für die llfs Partitionen bereit stellen.
-Das Gastsystem sollte auf eine i686 Architektur laufen und mit maximal 1 CPU da SMP von llfs nicht unterstützt wird! Des weiteren sind 128MB RAM sicherlich ausreichend. Als Basis habe ich debian edge 4.0r8 netdist gewählt. Ein Image ist unter http://cdimage.debian.org/cdimage/archive/4.0_r8/i386/iso-cd/debian-40r8-i386-netinst.iso verfügbar. Bei der Installation des Gastes auf unötiges verzichten.
+Auf dem Host muss eine Virtuelle Maschine installiert werden. Für das root Verzeichnis sollten ca. 4GB zur Verfügung stehen. Des weiteren sollte man eine weiteres Image oder Festplatte für die llfs Partitionen bereit stellen.
+Das Gastsystem sollte auf eine i686 Architektur laufen und mit maximal 1 CPU da SMP von llfs nicht unterstützt wird! Des weiteren sollten 128MB RAM ausreichend sein. Als Basis habe ich debian edge 4.0r8 netdist gewählt. Ein Image ist unter http://cdimage.debian.org/cdimage/archive/4.0_r8/i386/iso-cd/debian-40r8-i386-netinst.iso verfügbar. Bei der Installation des Gastes auf unnötiges verzichten.
 
-Die folgenden schritte sind auf dem Gast durchzuführen. Meine Annahmen sind, dass das Gastsystem Zugriff auf das Internet hat.
+Die folgenden Schritte sind auf dem Gast durchzuführen. Meine Annahme ist, dass das Gastsystem Zugriff auf das Internet hat.
 --------------------------------------------------------------------------------
 apt-get install openssh-server #falls nötig
 cd /usr/src
@@ -57,9 +57,9 @@ make install
 
 Den Kernel normal kompilieren und installieren. Eventuelle Anpassung des Bootloaders. Z.b. bei grub, in die Datei /boot/grub/menu.lst einen Eintrag für den neuen Kernel machen.
 
-VM auschalten und dann mit 2.6.16 Kernel booten.
+VM ausschalten und dann mit 2.6.16 Kernel booten.
 
-Nun muss noch mkllfs komiliert werden
+Nun muss noch mkllfs kompiliert werden
 --------------------------------------------------------------------------------
 cd /root
 tar xzvf e2fsprogs-1.41.0.llfs.tar.gz
@@ -100,10 +100,10 @@ patch -p0 -i /root/patches/llfs.minicleanup.patch
 cd /root
 patch -p0 -i /root/patches/e2fsprogs.llfs.minicleanup.patch
 
-Neu Kompilierung von Kernel, nun kann man ext2 wieder beliebig konfigurieren.
+Neu Kompilierung von Kernel und mkllfs.
 
 
-Diese Patches beheben das ext config Problem und gibt llfs eine eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer ext2 verwechselt werden.
+Diese Patches behebt das "ext config" Problem und gibt llfs eine eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer ext2 Partition verwechselt werden.
 
 3. Interpretation meiner Testergebnisse
 Im Archive llfs-test-suite.tar.bz2 sind im Ordner tests/results meine Ergebnisse drinnen.
