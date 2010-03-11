@@ -80,7 +80,7 @@ lmount 1
 lmount 2
 
 check=0
-if `getdir 0` -1 | diff - expected/expect1.2.1 > results/diff.1.2.1;
+if ls `getdir 0` -1 | diff - expected/expect1.2.1 > results/diff.1.2.1;
 	then true
 	else check=1; echo "1.2.1 fehlgeschlagen"
 fi

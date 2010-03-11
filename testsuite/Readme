@@ -1,5 +1,8 @@
+Was ist llfs?
+LLFS ist ein Dateisystem, nähere Informationen findet man hier: http://www.ub.tuwien.ac.at/dipl/2008/AC05037518.pdf
+
 Was ist llfs Test-Packet?
-Eine Anleitung zum erstellen eines Tests System zum testen von llfs!
+Beinhaltet eine Testumgebung für llfs, sowie einen kleine Patches für llfs.
 
 Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses Testsystem basiert auf einer emulierten Maschine mittels kvm. Es sollte aber ohne große Änderungen auch für andere Virtualisierungen wie auch für User Mode Linux funktionieren. Es wurde kvm gewählt, weil es unter Linux ein leicht zu bedienende VM-System ist.
 
@@ -71,16 +74,22 @@ mkdir llfs0;mkdir llfs1;mkdir llfs2;mkdir llfs3;mkdir llfs4;
 mkdir llfs5;mkdir llfs6;mkdir llfs7;mkdir llfs8;mkdir llfs9;
 --------------------------------------------------------------------------------
 
-/dev/hdb partitionieren, es muss ein /dev/hdb1 erzeugt werden.
+/dev/hdb partitionieren.
 
-
+--------------------------------------------------------------------------------
 cd /root
-tar xvjf llfs-test-suit.tar.bz2
+tar xvjf llfs-test-suite.tar.bz2
+--------------------------------------------------------------------------------
 
-1.2 Ausführen der Tests
+1.2 Konfiguration der Test
+In der Date alltest.sh kann das device, mount optionen, der mount punkt und das mkllfs executable gesetzt werden.
+
+1.3 Ausführen der Tests
+Hierzu muss man folgende Befehle eingeben.
+--------------------------------------------------------------------------------
 cd /root/tests
-./test[1-3].sh
-
+./alltests.sh
+--------------------------------------------------------------------------------
 
 2. Mini Cleanup
 Es muss sowohl das llfs Modul als auch e2fsprogs gepatcht werden.
@@ -94,6 +103,14 @@ patch -p0 -i /root/patches/e2fsprogs.llfs.minicleanup.patch
 Neu Kompilierung von Kernel, nun kann man ext2 wieder beliebig konfigurieren.
 
 
-Diese Patches beheben das ext config problem und gibt llfs eine eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer ext2 verwechselt werden.
+Diese Patches beheben das ext config Problem und gibt llfs eine eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer ext2 verwechselt werden.
 
+3. Interpretation meiner Testergebnisse
+Im Archive llfs-test-suite.tar.bz2 sind im Ordner tests/results meine Ergebnisse drinnen.
+Die Datei output beinhaltet die Ausgabe vom alltests.sh Skript.
+Folgendes ist aus den Daten ersichtlich.
+ - Ohne Cloning dürfte das Dateisystem einwandfrei funktionieren
+ - Das Clonen, sowie die Snapshots funktionieren nicht
+
+Warum das Clonen nicht funktioniert ist leider noch unklar, es kann am llfs sourcecode selbst liegen oder aber auch an der Konfiguration des Kernels
 
