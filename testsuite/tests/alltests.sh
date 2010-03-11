@@ -11,8 +11,8 @@ fail=0
 #export fail
 
 source ./test1.sh
-#./test2.sh
-#./test3.sh
+source ./test2.sh
+source ./test3.sh
 
 echo "Von $comp Test Cases sind $fail fehlgeschlagen"
 

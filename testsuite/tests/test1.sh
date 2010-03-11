@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test 1 is all about file creation
 
-echo "Startet des 1. Test, \nhier testen wir die Erstellung von Datein"
+echo "Start des 1. Test, hier testen wir die Erstellung von Datein"
 echo "================================================================================"
 echo "Erster Test Case Clone 1 von Clone 0, Clone 2 von Clone 1"
 echo "================================================================================"
@@ -11,15 +11,13 @@ echo "==========================================================================
 touch /llfs0/Clone0Step1
 touch /llfs0/Clone0Step2
 
-echo 01 > /llfs0/.config
-sync
+./llfs-clone.sh 0 1
 
 
 umount /llfs0
 ./mount.sh 1
 touch /llfs1/Clone1Step3
-echo 12 > /llfs1/.config
-sync
+./llfs-clone.sh 2 1
 umount /llfs1
 
 
@@ -67,10 +65,8 @@ echo "==========================================================================
 touch /llfs0/Clone0Step1
 touch /llfs0/Clone0Step2
 
-echo 01 > /llfs0/.config
-sync
-echo 02 > /llfs0/.config
-sync
+./llfs-clone.sh 0 1
+./llfs-clone.sh 0 2
 
 umount /llfs0
 ./mount.sh 1
@@ -97,6 +93,19 @@ if ls /llfs2 -1 | diff - expected/expect1.2.3 > results/diff.1.2.3;
 	then true
 	else check=1; echo "1.2.3 fehlgeschlagen"
 fi
+touch /llfs0/Clone0Step5
+if ls /llfs0 -1 | diff - expected/expect1.2.4 > results/diff.1.2.4;
+	then true
+	else check=1; echo "1.2.4 fehlgeschlagen"
+fi
+if ls /llfs1 -1 | diff - expected/expect1.2.5 > results/diff.1.2.5;
+	then true
+	else check=1; echo "1.2.5 fehlgeschlagen"
+fi
+if ls /llfs2 -1 | diff - expected/expect1.2.6 > results/diff.1.2.6;
+	then true
+	else check=1; echo "1.2.6 fehlgeschlagen"
+fi
 
 comp=`expr $comp + 1`
 fail=`expr $fail + $check`
@@ -117,8 +126,7 @@ echo "==========================================================================
 ./mount.sh 0
 touch /llfs0/Clone0Step1
 
-echo 01 > /llfs0/.config
-sync
+./llfs-clone.sh 0 1
 
 umount /llfs0
 ./mount.sh 1
