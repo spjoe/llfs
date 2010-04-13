@@ -1,0 +1,148 @@
+Was ist llfs?
+LLFS ist ein Dateisystem, nähere Informationen findet man hier: 
+http://www.ub.tuwien.ac.at/dipl/2008/AC05037518.pdf
+
+Was ist dieses llfs Test-Paket?
+Beinhaltet eine Testumgebung für llfs, sowie kleine Patches für llfs.
+
+Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses
+Testsystem basiert auf einer emulierten Maschine mittels kvm. Es
+sollte aber ohne große Änderungen auch für andere Virtualisierungen
+wie auch für User Mode Linux funktionieren. Es wurde kvm gewählt,
+weil es unter Linux ein leicht zu bedienendes VM-System ist.
+
+1. DIE TESTUMGEBUNG
+
+1.1 Schrittweise Erklärung zum Aufbau der Testumgebung
+
+Ich werde möglichst genau beschreiben wie mein Test-System
+konfiguriert ist damit man die Ergebnisse leicht verifizieren kann.
+
+Auf dem Host muss eine Virtuelle Maschine installiert werden. Für das
+root Verzeichnis sollten ca. 4GB zur Verfügung stehen. Des weiteren
+sollte man eine weiteres Image oder Festplatte für die llfs
+Partitionen bereit stellen.
+Das Gastsystem sollte auf eine i686 Architektur laufen und mit
+maximal 1 CPU da SMP von llfs nicht unterstützt wird! Des weiteren
+sollten 128MB RAM ausreichend sein. Als Basis habe ich debian edge
+4.0r8 netdist gewählt. Ein Image ist unter 
+http://cdimage.debian.org/cdimage/archive/4.0_r8/i386/iso-cd/debian\
+-40r8-i386-netinst.iso verfügbar. Bei der Installation des Gastes auf
+unnötiges verzichten.
+
+Die folgenden Schritte sind auf dem Gast durchzuführen. Meine Annahme
+ ist, dass das Gastsystem Zugriff auf das Internet hat.
+---------------------------------------------------------------------
+apt-get install openssh-server #falls nötig
+cd /usr/src
+wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2
+wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz\
+2.sign
+gpg --keyserver wwwkeys.pgp.net --recv-keys 0x517D0F0E
+gpg --verify linux-2.6.16.tar.bz2.sign linux-2.6.16.tar.bz2
+apt-get install bzip2
+tar xvjf linux-2.6.16.tar.bz2
+wget http://www.complang.tuwien.ac.at/rasto/llfs-source/llfs-0.0.1.t\
+ar.gz
+wget http://www.complang.tuwien.ac.at/rasto/llfs-source/llfs.0.0.1.p\
+atch
+
+cd /root
+wget http://www.complang.tuwien.ac.at/rasto/llfs-source/e2fsprogs-1.\
+41.0.llfs.tar.gz
+cd /usr/src
+patch -p0 -i llfs.0.0.1.patch
+
+tar xzvf llfs-0.0.1.tar.gz 
+mv llfs-0.0.1 linux-2.6.16/fs/llfs
+ln -s linux-2.6.16 linux
+cd linux
+apt-get install build-essential
+apt-get install libncurses5-dev # für menuconfig
+---------------------------------------------------------------------
+
+Als nächstes muss der Kernel Konfiguriert werden. Diese hängt sehr 
+davon ab wie die Virtuelle Maschine konfiguriert ist. Aber einige
+Sachen sind einzuhalten da sonst llfs nicht kompiliert.
+
+make [YOUR CONFIG FAVORITE]
+"Preempt the Big Kernel Lock" in "Processor type and features" 
+deaktivieren.
+"Symmetric multi-processing support" in "Processor type and features"
+deaktivieren.
+"llfs fs support" in "File systems" auf M setzen.
+Alle Second extended fs support features deaktivieren, das sind 
+"Ext2 extended attributes","Ext2 execute in place support".
+
+Danach mittels:
+
+make
+make modules_install
+make install
+
+Den Kernel normal kompilieren und installieren. Eventuelle Anpassung
+des Bootloaders. Z.b. bei grub, in die Datei /boot/grub/menu.lst 
+einen Eintrag für den neuen Kernel erstellen.
+
+VM ausschalten und dann mit 2.6.16 Kernel booten.
+
+Nun muss noch mkllfs kompiliert werden
+---------------------------------------------------------------------
+cd /root
+tar xzvf e2fsprogs-1.41.0.llfs.tar.gz
+cd e2fsprogs-1.41.0.llfs
+mkdir build
+cd build
+../configure
+make
+
+cd /
+mkdir llfs0;mkdir llfs1;mkdir llfs2;mkdir llfs3;mkdir llfs4; 
+mkdir llfs5;mkdir llfs6;mkdir llfs7;mkdir llfs8;mkdir llfs9;
+---------------------------------------------------------------------
+/dev/hdb partitionieren.
+
+---------------------------------------------------------------------
+cd /root
+tar xvjf llfs-test-suite.tar.bz2
+---------------------------------------------------------------------
+
+1.2 Konfiguration der Testumgebung
+In der Datei alltests.sh kann das Gerät, die mount Optionen, der 
+mount Punkt und das mkllfs Programm gesetzt werden.
+
+1.3 Ausführen der Tests
+Hierzu muss man folgende Befehle eingeben.
+---------------------------------------------------------------------
+cd /root/tests
+./alltests.sh
+---------------------------------------------------------------------
+
+2. Mini Cleanup
+Es muss sowohl das llfs Modul als auch e2fsprogs gepatcht werden.
+cd /root
+cd /usr/src/linux/fs
+patch -p0 -i /root/patches/llfs.minicleanup.patch 
+
+cd /root
+patch -p0 -i /root/patches/e2fsprogs.llfs.minicleanup.patch
+
+Neu Kompilierung von Kernel und mkllfs.
+
+
+Diese Patches behebt das "ext2 config" Problem und gibt llfs eine 
+eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer 
+ext2 Partition verwechselt werden.
+
+3. Interpretation meiner Testergebnisse
+Im Archive llfs-test-suite.tar.bz2 sind im Ordner tests/results meine
+Ergebnisse drinnen.
+Die Datei output beinhaltet die Ausgabe vom alltests.sh Skript.
+Folgendes ist aus den Daten ersichtlich.
+ - Ohne Cloning dürfte das Dateisystem einwandfrei funktionieren
+ - Das Clonen, sowie die Snapshots funktionieren nicht
+
+Warum das Clonen nicht funktioniert ist leider noch unklar, es kann
+am llfs Sourcecode selbst liegen oder aber auch an der Konfiguration
+des Kernels.
+

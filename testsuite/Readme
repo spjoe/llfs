@@ -1,39 +1,37 @@
-Was ist llfs?
-LLFS ist ein Dateisystem, nähere Informationen findet man hier: 
+What is llfs?
+LLFS is a File-system. You can find more detailed information here: 
 http://www.ub.tuwien.ac.at/dipl/2008/AC05037518.pdf
 
-Was ist dieses llfs Test-Paket?
-Beinhaltet eine Testumgebung für llfs, sowie kleine Patches für llfs.
+What is this llfs Test-Package?
+This package contains an test environment and little patches for 
+llfs.
 
-Es gibt viele Möglichkeiten ein Kernelmodul zu testen. Dieses
-Testsystem basiert auf einer emulierten Maschine mittels kvm. Es
-sollte aber ohne große Änderungen auch für andere Virtualisierungen
-wie auch für User Mode Linux funktionieren. Es wurde kvm gewählt,
-weil es unter Linux ein leicht zu bedienendes VM-System ist.
+There are many possible ways to test a kernel module. This 
+test-environment is based on a VM(Virtual machines) called kvm. But
+it should also work with UML (User Mode Linux) or other VMs. I choose
+kvm, because it is easy too use on Linux.
 
-1. DIE TESTUMGEBUNG
 
-1.1 Schrittweise Erklärung zum Aufbau der Testumgebung
+1. The test-environment
 
-Ich werde möglichst genau beschreiben wie mein Test-System
-konfiguriert ist damit man die Ergebnisse leicht verifizieren kann.
+1.1 Step by step instructions to build the test-environment
 
-Auf dem Host muss eine Virtuelle Maschine installiert werden. Für das
-root Verzeichnis sollten ca. 4GB zur Verfügung stehen. Des weiteren
-sollte man eine weiteres Image oder Festplatte für die llfs
-Partitionen bereit stellen.
-Das Gastsystem sollte auf eine i686 Architektur laufen und mit
-maximal 1 CPU da SMP von llfs nicht unterstützt wird! Des weiteren
-sollten 128MB RAM ausreichend sein. Als Basis habe ich debian edge
-4.0r8 netdist gewählt. Ein Image ist unter 
+I try to explain every step very detailed so it should be easy to 
+verify my test results. 
+
+You have to install a VM on your Host System. The root directory
+should have place for 4gb data. A hard disc should also prepared for
+the tests. This hard drive could also be an image.
+The guest system should be a i686 Architecture with at most 1 CPU.
+I used this distro:
 http://cdimage.debian.org/cdimage/archive/4.0_r8/i386/iso-cd/debian\
--40r8-i386-netinst.iso verfügbar. Bei der Installation des Gastes auf
-unnötiges verzichten.
+-40r8-i386-netinst.iso
+Your guest only need basic stuff.
 
-Die folgenden Schritte sind auf dem Gast durchzuführen. Meine Annahme
- ist, dass das Gastsystem Zugriff auf das Internet hat.
+The next steps have to executed on the guest system. My assumption is
+the guest system have an Internet connection
 ---------------------------------------------------------------------
-apt-get install openssh-server #falls nötig
+apt-get install openssh-server #if necessary
 cd /usr/src
 wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz2
 wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.16.tar.bz\
@@ -58,35 +56,34 @@ mv llfs-0.0.1 linux-2.6.16/fs/llfs
 ln -s linux-2.6.16 linux
 cd linux
 apt-get install build-essential
-apt-get install libncurses5-dev # für menuconfig
+apt-get install libncurses5-dev # for menuconfig
 ---------------------------------------------------------------------
 
-Als nächstes muss der Kernel Konfiguriert werden. Diese hängt sehr 
-davon ab wie die Virtuelle Maschine konfiguriert ist. Aber einige
-Sachen sind einzuhalten da sonst llfs nicht kompiliert.
+Yet you have to config your kernel. You can config your kernel as you
+want but some options are not allowed do be activated.
 
 make [YOUR CONFIG FAVORITE]
-"Preempt the Big Kernel Lock" in "Processor type and features" 
-deaktivieren.
-"Symmetric multi-processing support" in "Processor type and features"
-deaktivieren.
-"llfs fs support" in "File systems" auf M setzen.
-Alle Second extended fs support features deaktivieren, das sind 
+"Preempt the Big Kernel Lock" at "Processor type and features" 
+deactivate.
+"Symmetric multi-processing support" at "Processor type and features"
+deactivate.
+Set "llfs fs support" at "File systems" to M.
+Disable all Second extended fs support features,
 "Ext2 extended attributes","Ext2 execute in place support".
 
-Danach mittels:
+After that:
 
 make
 make modules_install
 make install
 
-Den Kernel normal kompilieren und installieren. Eventuelle Anpassung
-des Bootloaders. Z.b. bei grub, in die Datei /boot/grub/menu.lst 
-einen Eintrag für den neuen Kernel erstellen.
+Just compile and install the kernel. And you should change your
+boot loader to your needs. For example if you use grub, you have to
+add an entry to /boot/grub/menu.lst.
 
-VM ausschalten und dann mit 2.6.16 Kernel booten.
+Reboot your VM and start with the new kernel.
 
-Nun muss noch mkllfs kompiliert werden
+Now we compile mkllfs
 ---------------------------------------------------------------------
 cd /root
 tar xzvf e2fsprogs-1.41.0.llfs.tar.gz
@@ -100,49 +97,48 @@ cd /
 mkdir llfs0;mkdir llfs1;mkdir llfs2;mkdir llfs3;mkdir llfs4; 
 mkdir llfs5;mkdir llfs6;mkdir llfs7;mkdir llfs8;mkdir llfs9;
 ---------------------------------------------------------------------
-/dev/hdb partitionieren.
+/dev/hdb partition.
 
 ---------------------------------------------------------------------
 cd /root
 tar xvjf llfs-test-suite.tar.bz2
 ---------------------------------------------------------------------
 
-1.2 Konfiguration der Testumgebung
-In der Datei alltests.sh kann das Gerät, die mount Optionen, der 
-mount Punkt und das mkllfs Programm gesetzt werden.
+1.2 Configure the test environment
+In the file alltests.sh you can change the llfs device, mount option
+and the mount point.
 
-1.3 Ausführen der Tests
-Hierzu muss man folgende Befehle eingeben.
+1.3 Execute the test
+Type in following commands
 ---------------------------------------------------------------------
 cd /root/tests
 ./alltests.sh
 ---------------------------------------------------------------------
 
 2. Mini Cleanup
-Es muss sowohl das llfs Modul als auch e2fsprogs gepatcht werden.
+You need to patch the kernel and mkllfs.
+---------------------------------------------------------------------
 cd /root
 cd /usr/src/linux/fs
 patch -p0 -i /root/patches/llfs.minicleanup.patch 
 
 cd /root
 patch -p0 -i /root/patches/e2fsprogs.llfs.minicleanup.patch
+---------------------------------------------------------------------
 
-Neu Kompilierung von Kernel und mkllfs.
+Recompile and install the kernel and mkllfs.
 
+These Patches solve the "ext2 config" problem and also give llfs an
+own SUPER MAGIC number. So the partition can not be mistaken llfs for
+ext2.
 
-Diese Patches behebt das "ext2 config" Problem und gibt llfs eine 
-eigene SUPER MAGIC, somit kann die Partition nicht mehr mit einer 
-ext2 Partition verwechselt werden.
+3. My test results
+In the Directory tests/results are my results.
+The file output contains the output of alltests.sh script.
+After checking the output, you can see
+	- Without cloning the fs works fine.
+	- Clones and snapshots do not work.
 
-3. Interpretation meiner Testergebnisse
-Im Archive llfs-test-suite.tar.bz2 sind im Ordner tests/results meine
-Ergebnisse drinnen.
-Die Datei output beinhaltet die Ausgabe vom alltests.sh Skript.
-Folgendes ist aus den Daten ersichtlich.
- - Ohne Cloning dürfte das Dateisystem einwandfrei funktionieren
- - Das Clonen, sowie die Snapshots funktionieren nicht
-
-Warum das Clonen nicht funktioniert ist leider noch unklar, es kann
-am llfs Sourcecode selbst liegen oder aber auch an der Konfiguration
-des Kernels.
+Why the cloning does not work is unclear, it could be a bug in the
+llfs source code, or the kernel is not correct configured.
 
