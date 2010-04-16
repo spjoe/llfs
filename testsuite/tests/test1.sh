@@ -1,8 +1,8 @@
 echo "================================================================================"
 echo "================================================================================"
-echo "Start des 1. Test, hier testen wir die Erstellung von Datein"
+echo "Start the 1. test: testing file creation"
 echo "================================================================================"
-echo "Erster Test Case Clone 1 von Clone 0, Clone 2 von Clone 1"
+echo "First test case Clone 1 from Clone 0, Clone 2 from Clone 1"
 echo "================================================================================"
 
 ./cleanup.sh
@@ -31,22 +31,22 @@ lmount 2
 check=0
 if ls `getdir 0` -1 | diff - expected/expect1.1.1 > results/diff.1.1.1;
 	then true
-	else check=1; echo "1.1.1 fehlgeschlagen"
+	else check=1; echo "1.1.1 failed"
 fi
 if ls `getdir 1` -1 | diff - expected/expect1.1.2 > results/diff.1.1.2;
 	then true
-	else check=1; echo "1.1.2 fehlgeschlagen"
+	else check=1; echo "1.1.2 failed"
 fi
 if ls `getdir 2` -1 | diff - expected/expect1.1.3 > results/diff.1.1.3;
 	then true
-	else check=1; echo "1.1.3 fehlgeschlagen"
+	else check=1; echo "1.1.3 failed"
 fi
 
 comp=`expr $comp + 1`
 fail=`expr $fail + $check`
 
 if [ $check -eq 1 ]
-	then echo "Im Test 1 Case 1 sind Fehler aufgetreten"
+	then echo "Test 1.1 failed"
 fi
 
 lumount 0
@@ -56,7 +56,7 @@ lumount 2
 
 
 echo "================================================================================"
-echo "Zweiter Test Case Clone 1 und 2 von Clone 0"
+echo "Second test case Clone 1 and 2 from Clone 0"
 echo "================================================================================"
 
 ./cleanup.sh
@@ -82,35 +82,35 @@ lmount 2
 check=0
 if ls `getdir 0` -1 | diff - expected/expect1.2.1 > results/diff.1.2.1;
 	then true
-	else check=1; echo "1.2.1 fehlgeschlagen"
+	else check=1; echo "1.2.1 failed"
 fi
 if ls `getdir 1` -1 | diff - expected/expect1.2.2 > results/diff.1.2.2;
 	then true
-	else check=1; echo "1.2.2 fehlgeschlagen"
+	else check=1; echo "1.2.2 failed"
 fi
 if ls `getdir 2` -1 | diff - expected/expect1.2.3 > results/diff.1.2.3;
 	then true
-	else check=1; echo "1.2.3 fehlgeschlagen"
+	else check=1; echo "1.2.3 failed"
 fi
 touch `getdir 0`/Clone0Step5
 if ls `getdir 0` -1 | diff - expected/expect1.2.4 > results/diff.1.2.4;
 	then true
-	else check=1; echo "1.2.4 fehlgeschlagen"
+	else check=1; echo "1.2.4 failed"
 fi
 if ls `getdir 1` -1 | diff - expected/expect1.2.5 > results/diff.1.2.5;
 	then true
-	else check=1; echo "1.2.5 fehlgeschlagen"
+	else check=1; echo "1.2.5 failed"
 fi
 if ls `getdir 2` -1 | diff - expected/expect1.2.6 > results/diff.1.2.6;
 	then true
-	else check=1; echo "1.2.6 fehlgeschlagen"
+	else check=1; echo "1.2.6 failed"
 fi
 
 comp=`expr $comp + 1`
 fail=`expr $fail + $check`
 
 if [ $check -eq 1 ]
-	then echo "Im Test 1 Case 2 sind Fehler aufgetreten"
+	then echo "Test 1.2 failed"
 fi
 
 lumount 0
@@ -118,7 +118,7 @@ lumount 1
 lumount 2
 
 echo "================================================================================"
-echo "Dritter Test Case Clone 1 von Clone 0"
+echo "Third test case Clone 1 from Clone 0"
 echo "================================================================================"
 
 ./cleanup.sh
@@ -138,18 +138,18 @@ lmount 1
 check=0
 if ls `getdir 0` -1 | diff - expected/expect1.3.1 > results/diff.1.3.1;
 	then true
-	else check=1; echo "1.3.1 fehlgeschlagen"
+	else check=1; echo "1.3.1 failed"
 fi
 if ls `getdir 1` -1 | diff - expected/expect1.3.2 > results/diff.1.3.2;
 	then true
-	else check=1; echo "1.3.2 fehlgeschlagen"
+	else check=1; echo "1.3.2 failed"
 fi
 
 comp=`expr $comp + 1`
 fail=`expr $fail + $check`
 
 if [ $check -eq 1 ]
-	then echo "Im Test 1 Case 3 sind Fehler aufgetreten"
+	then echo "Test 1.3 failed"
 fi
 
 lumount 0

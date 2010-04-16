@@ -1,8 +1,8 @@
 echo "================================================================================"
 echo "================================================================================"
-echo "Start des 4. Test, hier testen wir das Löschen von Dateien"
+echo "Start 4. Test: testing file deletion"
 echo "================================================================================"
-echo "Erster Test Case Clone 1 und Clone 2 von Clone 0"
+echo "First test case Clone 1 and Clone 2 from Clone 0"
 echo "================================================================================"
 
 ./cleanup.sh
@@ -23,15 +23,15 @@ lmount 2
 check=0
 if ls `getdir 0` -1 | diff - expected/expect4.1.1 > results/diff.4.1.1;
 	then true
-	else check=1; echo "4.1.1 fehlgeschlagen"
+	else check=1; echo "4.1.1 failed"
 fi
 if ls `getdir 1` -1 | diff - expected/expect4.1.2 > results/diff.4.1.2;
 	then true
-	else check=1; echo "4.1.2 fehlgeschlagen"
+	else check=1; echo "4.1.2 failed"
 fi
 if ls `getdir 2` -1 | diff - expected/expect4.1.3 > results/diff.4.1.3;
 	then true
-	else check=1; echo "4.1.3 fehlgeschlagen"
+	else check=1; echo "4.1.3 failed"
 fi
 
 rm `getdir 0`/Clone0Step1
@@ -40,22 +40,22 @@ rm `getdir 2`/Clone0Step3
 
 if ls `getdir 0` -1 | diff - expected/expect4.1.4 > results/diff.4.1.4;
 	then true
-	else check=1; echo "4.1.4 fehlgeschlagen"
+	else check=1; echo "4.1.4 failed"
 fi
 if ls `getdir 1` -1 | diff - expected/expect4.1.5 > results/diff.4.1.5;
 	then true
-	else check=1; echo "4.1.5 fehlgeschlagen"
+	else check=1; echo "4.1.5 failed"
 fi
 if ls `getdir 2` -1 | diff - expected/expect4.1.6 > results/diff.4.1.6;
 	then true
-	else check=1; echo "4.1.6 fehlgeschlagen"
+	else check=1; echo "4.1.6 failed"
 fi
 
 comp=`expr $comp + 1`
 fail=`expr $fail + $check`
 
 if [ $check -eq 1 ]
-	then echo "Im Test 4 Case 1 sind Fehler aufgetreten"
+	then echo "Test 4.1 failed"
 fi
 
 lumount 0

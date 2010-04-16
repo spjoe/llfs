@@ -1,8 +1,8 @@
 echo "================================================================================"
 echo "================================================================================"
-echo "Start des 3. Test, hier testen wir die Änderungen von Datein"
+echo "Start 3. test: testing data changing"
 echo "================================================================================"
-echo "Erster Test Case Clone 1 und 2 von Clone 0"
+echo "First Test Case Clone 1 and 2 from Clone 0"
 echo "================================================================================"
 
 
@@ -29,22 +29,22 @@ lmount 2
 check=0
 if diff `getdir 0`/test expected/expect3.1.1 > results/diff.3.1.1;
 	then true
-	else check=1; echo "3.1.1 fehlgeschlagen"
+	else check=1; echo "3.1.1 failed"
 fi
 if diff `getdir 1`/test expected/expect3.1.2 > results/diff.3.1.2;
 	then true
-	else check=1; echo "3.1.2 fehlgeschlagen"
+	else check=1; echo "3.1.2 failed"
 fi
 if diff `getdir 2`/test expected/expect3.1.3 > results/diff.3.1.3;
 	then true
-	else check=1; echo "3.1.3 fehlgeschlagen"
+	else check=1; echo "3.1.3 failed"
 fi
 
 comp=`expr $comp + 1`
 fail=`expr $fail + $check`
 
 if [ $check -eq 1 ]
-	then echo "Im Test 3 Case 1 sind Fehler aufgetreten"
+	then echo "Test 3.1 failed"
 fi
 
 lumount 0

@@ -1,8 +1,8 @@
 echo "================================================================================"
 echo "================================================================================"
-echo "Start des 2. Test, hier testen wir die Erstellung von Verzeichnissen"
+echo "Start the 2. test: testing directory creation"
 echo "================================================================================"
-echo "Erster Test Case Clone 1 und 2 von Clone 0"
+echo "First test case Clone 1 and 2 from Clone 0"
 echo "================================================================================"
 
 ./cleanup.sh
@@ -28,22 +28,22 @@ lmount 2
 check=0
 if ls `getdir 0` -1 | diff - expected/expect2.1.1 > results/diff.2.1.1;
 	then true
-	else check=1; echo "2.1.1 fehlgeschlagen"
+	else check=1; echo "2.1.1 failed"
 fi
 if ls `getdir 1` -1 | diff - expected/expect2.1.2 > results/diff.2.1.2;
 	then true
-	else check=1; echo "2.1.2 fehlgeschlagen"
+	else check=1; echo "2.1.2 failed"
 fi
 if ls `getdir 2` -1 | diff - expected/expect2.1.3 > results/diff.2.1.3;
 	then true
-	else check=1; echo "2.1.3 fehlgeschlagen"
+	else check=1; echo "2.1.3 failed"
 fi
 
 comp=`expr $comp + 1`
 fail=`expr $fail + $check`
 
 if [ $check -eq 1 ]
-	then echo "Im Test 2 Case 1 sind Fehler aufgetreten"
+	then echo "Test 2.1 failed"
 fi
 
 lumount 0
